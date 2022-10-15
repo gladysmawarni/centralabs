@@ -11,7 +11,7 @@ def register():
     ## prod
     key_dict = json.loads(st.secrets["textkey"])
     creds = service_account.Credentials.from_service_account_info(key_dict)
-    db = firestore.Client(credentials=creds, project="cerntralabs99")
+    db = firestore.Client(credentials=creds, project="centralabs99")
 
     preauth = db.collection('preauthorized')
 
