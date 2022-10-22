@@ -62,7 +62,7 @@ def register():
 
 
     preauthstudents = [(doc.to_dict()['email'], doc.to_dict()['cohort']) for doc in preauth.stream()]
-    
+ 
 
     with st.form('register_form'):
         st.subheader('Registration')
@@ -77,26 +77,32 @@ def register():
     else:
         if password != password2:
             st.error('Password does not match')
-        
-        for preauthemail, preauthcohort in preauthstudents:
-            if email == preauthemail:
-                user_ref = db.collection('registered').document(email)
-                user_ref.set(
-                    {
-                        "email" : email,
-                        "name" : name,
-                        "password" : password,
-                        "cohort" : preauthcohort
-                    }
-                )
-                ## TODO : delete registered preauthorized email
+        else:
+            flag = False
+            for preauthemail, preauthcohort in preauthstudents:
+                if email == preauthemail:
+                    user_ref = db.collection('registered').document(email)
+                    user_ref.set(
+                        {
+                            "email" : email,
+                            "name" : name,
+                            "password" : password,
+                            "cohort" : preauthcohort
+                        }
+                    )
 
-                # populate labs db
-                populatedb(name)
+                    # populate labs db
+                    populatedb(name)
 
-                st.success('Successfully registered :)')
+                    st.success('Successfully registered :)')
+                    flag = True
 
-            else:
+                     ## delete registered preauthorized email
+                    delete_query = preauth.where('email', '==', preauthemail)
+                    deleted = [doc.reference.delete() for doc in delete_query.get()]
+
+              
+            if flag == False:
                 st.error('Email not pre-authorized.')
 
 
