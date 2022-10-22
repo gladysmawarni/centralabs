@@ -4,47 +4,109 @@ from google.oauth2 import service_account
 import json
 
 
+labs_dict = {'lablistcomprehensions' : 'Not delivered',
+'labtuplesetdict' : 'Not delivered',
+'labstringoperations' : 'Not delivered',
+'labnumpy' : 'Not delivered',
+'labintropandas' : 'Not delivered',
+'labmysqlfirstqueries' : 'Not delivered',
+'labmysqlselect' : 'Not delivered',
+'labmysql' : 'Not delivered',
+'labdataframecalculations' : 'Not delivered',
+'labadvancedpandas' : 'Not delivered',
+'labimportexport' : 'Not delivered', 
+'labdatacleaning' : 'Not delivered',
+'lablambdafunctions' : 'Not delivered',
+'labapiscavenger' : 'Not delivered',
+'labwebscraping' : 'Not delivered',
+'labpandasdeepdive' : 'Not delivered',
+'labadvancedregex' : 'Not delivered',
+'labmatplotlibseaborn' : 'Not delivered',
+'labintrobitableau' : 'Not delivered',
+'labbianalysistableau' : 'Not delivered',
+'labpivottableandcorrelation' : 'Not delivered',
+'DescriptiveStats' : 'Not delivered',
+'labregressionanalysis' : 'Not delivered',
+'labsubsettinganddescriptivestats' : 'Not delivered',
+'labintroprob' : 'Not delivered',
+'labprobabilitydistributions' : 'Not delivered',
+'M2miniproject2' : 'Not delivered',
+'labconfidenceintervals' : 'Not delivered',
+'labhypothesistesting1' : 'Not delivered',
+'labhypothesistesting2' : 'Not delivered',
+'labintrotoscipy' : 'Not delivered',
+'labtwosamplehyptest' : 'Not delivered',
+'labgoodfitindeptests' : 'Not delivered',
+'labintrotoml' : 'Not delivered',
+'labsupervisedlearningfeatureextraction' : 'Not delivered',
+'labsupervisedlearning' : 'Not delivered',
+'labsupervisedlearningsklearn' : 'Not delivered',
+'labimbalance' : 'Not delivered',
+'labproblemsinml' : 'Not delivered',
+'labunsupervisedlearning' : 'Not delivered',
+'labunsupervisedlearningandsklearn' : 'Not delivered',
+'labdeeplearning' : 'Not delivered',
+'labnlp' : 'Not delivered'}
+
+## DEV
+db = firestore.Client.from_service_account_json("db/firestore-key.json")
+
+## PROD
+# key_dict = json.loads(st.secrets["textkey"])
+# creds = service_account.Credentials.from_service_account_info(key_dict)
+# db = firestore.Client(credentials=creds, project="centralabs99")
+
+
 def register():
-    ## dev
-    # db = firestore.Client.from_service_account_json("users/firestore-key.json")
-
-    ## prod
-    key_dict = json.loads(st.secrets["textkey"])
-    creds = service_account.Credentials.from_service_account_info(key_dict)
-    db = firestore.Client(credentials=creds, project="centralabs99")
-
     preauth = db.collection('preauthorized')
 
 
-    emails = [doc.to_dict()['email'] for doc in preauth.stream()]
+    preauthstudents = [(doc.to_dict()['email'], doc.to_dict()['cohort']) for doc in preauth.stream()]
+    
 
     with st.form('register_form'):
         st.subheader('Registration')
         email = st.text_input('Email')
-        username = st.text_input('Username').lower()
-        name = st.text_input('Name')
+        name = st.text_input('Full Name').lower()
         password = st.text_input('Password', type= 'password')
-        password2 = st.text_input('Re-type Password', type= 'password')
+        password2 = st.text_input('Re-enter Password', type= 'password')
         submit = st.form_submit_button('Register')
 
-    if (not email) | (not username) | (not name) | (not password):
+    if (not email) | (not name) | (not password):
         st.warning('Please fill in your information')
     else:
-        if email not in emails:
-            st.error('User not authorized')
-        elif password != password2:
+        if password != password2:
             st.error('Password does not match')
-        else:
-            user_ref = db.collection('registered').document(email)
-            user_ref.set(
-                {
-                    "email" : email,
-                    "username" : username,
-                    "name" : name,
-                    "password" : password
-                }
-            )
-            ## TODO : delete registered preauthorized email
-            st.success('Successfully registered :)')
+        
+        for preauthemail, preauthcohort in preauthstudents:
+            if email == preauthemail:
+                user_ref = db.collection('registered').document(email)
+                user_ref.set(
+                    {
+                        "email" : email,
+                        "name" : name,
+                        "password" : password,
+                        "cohort" : preauthcohort
+                    }
+                )
+                ## TODO : delete registered preauthorized email
+
+                # populate labs db
+                populatedb(name)
+
+                st.success('Successfully registered :)')
+
+            else:
+                st.error('Email not pre-authorized.')
+
+
+
+def populatedb(name):
+    # connect to user's labs collection
+    labs_ref = db.collection("labs").document(name)
+    # send the labs structure to db
+    labs_ref.set(labs_dict)
+
+
 
 register()
