@@ -49,12 +49,12 @@ labs_dict = {'lablistcomprehensions' : 'Not delivered',
 'labnlp' : 'Not delivered'}
 
 ## DEV
-db = firestore.Client.from_service_account_json("db/firestore-key.json")
+# db = firestore.Client.from_service_account_json("db/firestore-key.json")
 
 ## PROD
-# key_dict = json.loads(st.secrets["textkey"])
-# creds = service_account.Credentials.from_service_account_info(key_dict)
-# db = firestore.Client(credentials=creds, project="centralabs99")
+key_dict = json.loads(st.secrets["textkey"])
+creds = service_account.Credentials.from_service_account_info(key_dict)
+db = firestore.Client(credentials=creds, project="centralabs99")
 
 
 def register():
