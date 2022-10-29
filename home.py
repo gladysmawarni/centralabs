@@ -21,7 +21,7 @@ def login():
     # all the users who registered
     users = db.collection('registered')
     # list of registered emails
-    emails = [user.to_dict()['username'] for user in users.stream()]
+    usernames = [user.to_dict()['username'] for user in users.stream()]
 
     # login form
     with st.form('login_form'):
@@ -35,7 +35,7 @@ def login():
         st.warning('Please fill in your information')
     else:
         # if email is not in database
-        if username not in emails:
+        if username not in usernames:
             st.error('User not registered')
         else:
             # get the data of the user
