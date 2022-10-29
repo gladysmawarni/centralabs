@@ -6,7 +6,6 @@ import json
 import plotly.graph_objects as go
 import pandas as pd
 from datetime import datetime, date
-import time
 
 
 ## ----------------------------- FUNCTIONS --------------------------------------
@@ -22,25 +21,25 @@ def login():
     # all the users who registered
     users = db.collection('registered')
     # list of registered emails
-    emails = [user.to_dict()['email'] for user in users.stream()]
+    emails = [user.to_dict()['username'] for user in users.stream()]
 
     # login form
     with st.form('login_form'):
         st.subheader('Login')
-        email = st.text_input('Email')
+        username = st.text_input('username')
         password = st.text_input('Password', type= 'password')
         submit = st.form_submit_button('Login')
 
     # if the user did not fill all fields
-    if (not email) | (not password):
+    if (not username) | (not password):
         st.warning('Please fill in your information')
     else:
         # if email is not in database
-        if email not in emails:
+        if username not in emails:
             st.error('User not registered')
         else:
             # get the data of the user
-            logged_user = users.document(email).get().to_dict()
+            logged_user = users.document(username).get().to_dict()
             if password != logged_user['password']:
                 st.error('Password incorrect')
             else:
@@ -86,8 +85,6 @@ def pageOne():
     d1 = today.strftime("%B %d, %Y")
     st.header(d1)
 
-    time.sleep(1)
-    donutplot(st.session_state.labs)
 
     logout = st.sidebar.button('logout')
 
