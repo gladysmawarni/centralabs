@@ -1,5 +1,15 @@
 import requests
 import pandas as pd
+from google.cloud import firestore
+from google.oauth2 import service_account
+import json
+import streamlit as st
+
+
+## prod
+key_dict = json.loads(st.secrets["textkey"])
+creds = service_account.Credentials.from_service_account_info(key_dict)
+db = firestore.Client(credentials=creds, project="centralabs99")
 
 
 class Labs:
@@ -13,6 +23,7 @@ class Labs:
 
     def __init__(self, name) -> None:
         self.name = name.lower()
+
 
     def refresh(self, num):
         user_ref = db.collection("labs").document(self.name)

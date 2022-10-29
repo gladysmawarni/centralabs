@@ -60,10 +60,10 @@ db = firestore.Client(credentials=creds, project="centralabs99")
 def register():
     preauth = db.collection('preauthorized')
 
-
+    # emails of pre-authorized students
     preauthstudents = [(doc.to_dict()['email'], doc.to_dict()['cohort']) for doc in preauth.stream()]
  
-
+    # registration form
     with st.form('register_form'):
         st.subheader('Registration')
         email = st.text_input('Email')
@@ -72,14 +72,19 @@ def register():
         password2 = st.text_input('Re-enter Password', type= 'password')
         submit = st.form_submit_button('Register')
 
+    # if the user did not fill all the forms
     if (not email) | (not name) | (not password):
         st.warning('Please fill in your information')
+
     else:
+        # if the passwords do not match
         if password != password2:
             st.error('Password does not match')
+
         else:
             flag = False
             for preauthemail, preauthcohort in preauthstudents:
+                # if the email is pre-authorized
                 if email == preauthemail:
                     user_ref = db.collection('registered').document(email)
                     user_ref.set(
@@ -101,12 +106,12 @@ def register():
                     delete_query = preauth.where('email', '==', preauthemail)
                     deleted = [doc.reference.delete() for doc in delete_query.get()]
 
-              
+            # if the email is not pre-authorized
             if flag == False:
                 st.error('Email not pre-authorized.')
 
 
-
+# make a new document in the 'labs' collection for the new registered user
 def populatedb(name):
     # connect to user's labs collection
     labs_ref = db.collection("labs").document(name)
