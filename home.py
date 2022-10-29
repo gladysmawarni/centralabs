@@ -6,7 +6,7 @@ import json
 import plotly.graph_objects as go
 import pandas as pd
 from datetime import datetime, date
-from helper import Labs
+import time
 
 
 ## ----------------------------- FUNCTIONS --------------------------------------
@@ -86,6 +86,8 @@ def pageOne():
     d1 = today.strftime("%B %d, %Y")
     st.header(d1)
 
+    time.sleep(1)
+    donutplot(st.session_state.labs)
 
     logout = st.sidebar.button('logout')
 

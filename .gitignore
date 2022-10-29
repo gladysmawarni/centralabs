@@ -3,4 +3,4 @@ Pipfile.lock
 .streamlit
 db
 __pycache__
-trialcode
+devcode
