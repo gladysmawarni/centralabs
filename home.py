@@ -50,7 +50,7 @@ def login():
                 st.session_state.name = logged_user['name']
                 st.session_state.authenticated = True
                 st.session_state.navigation = ["pageone", "pagetwo"]
-                st.session_state.labs = db.collection('labs').document(logged_user['name']).get().to_dict()     
+                st.session_state.labs = db.collection('labs').document(logged_user['username']).get().to_dict()     
                 return True
 
 
