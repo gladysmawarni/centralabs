@@ -1,9 +1,11 @@
 import requests
+from requests.auth import HTTPBasicAuth
 import pandas as pd
 from google.cloud import firestore
 from google.oauth2 import service_account
 import json
 import streamlit as st
+
 
 
 ## prod
@@ -21,25 +23,24 @@ class Labs:
     week7 = ['lab-intro-to-ml', 'lab-supervised-learning-feature-extraction', 'lab-supervised-learning', 'lab-supervised-learning-sklearn', 'lab-imbalance', 'lab-problems-in-ml']
     week8 = ['lab-unsupervised-learning', 'lab-unsupervised-learning-and-sklearn', 'lab-deep-learning', 'lab-nlp']
 
-    def __init__(self, name) -> None:
-        self.name = name.lower()
+    def __init__(self, username) -> None:
+        self.username = username
+    
+    def __updateLabsDB(self, lablist):
+        user_ref = db.collection("labs").document(self.username)
+        for lab in lablist:
+            labspr = [lab['url'].split('ta-data-lis/')[1].split('/')[0].replace('-', '')]
+            for labname in labspr:
+                user_ref.update({labname : 'Delivered'})
 
 
-    def refresh(self, num):
-        user_ref = db.collection("labs").document(self.name)
-        weeklylabs = {1: self.week1, 2: self.week2, 3: self.week3, 4: self.week4, 5: self.week5, 7: self.week7, 8: self.week8}
-        
-        for lab_name in weeklylabs[num]:
-            print(lab_name)
-            response = requests.get('https://api.github.com/repos/ta-data-lis/' + lab_name + '/pulls')
-            data = pd.DataFrame(response.json())
-            if 'title' in data:
-                pr = data['title']
+    def checklabs(self):
+        url = 'https://api.github.com/search/issues?q=state%3Aopen+author%3A'+ self.username + '+type%3Apr'
+        response = requests.get(url=url, auth= HTTPBasicAuth('gladysmawarni', st.secrets["github_token"]))
+        user_pr = response.json()
 
-                pr_cohort_name = [a.split(']')[0].strip('[').strip() for a in pr if len(a.split(']')) > 1]
-                pr_name = [a.split(']')[1].strip() for a in pr if len(a.split(']')) > 1]
-
-                for pr in pr_name:
-                    if pr.lower().find(self.name) != -1:
-                        clean_labname = lab_name.replace('-', '')
-                        user_ref.update({clean_labname : 'Delivered'})
+        try:
+            lablist = [i['pull_request'] for i in user_pr['items']]
+            self.__updateLabsDB(lablist)
+        except:
+            print('no pr yet')

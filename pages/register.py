@@ -68,6 +68,7 @@ def register():
         st.subheader('Registration')
         email = st.text_input('Email')
         name = st.text_input('Full Name').lower()
+        username = st.text_input('Github username').lower()
         password = st.text_input('Password', type= 'password')
         password2 = st.text_input('Re-enter Password', type= 'password')
         submit = st.form_submit_button('Register')
@@ -91,13 +92,14 @@ def register():
                         {
                             "email" : email,
                             "name" : name,
+                            "username" : username,
                             "password" : password,
                             "cohort" : preauthcohort
                         }
                     )
 
                     # populate labs db
-                    populatedb(name)
+                    populatedb(username)
 
                     st.success('Successfully registered :)')
                     flag = True
@@ -112,9 +114,9 @@ def register():
 
 
 # make a new document in the 'labs' collection for the new registered user
-def populatedb(name):
+def populatedb(username):
     # connect to user's labs collection
-    labs_ref = db.collection("labs").document(name)
+    labs_ref = db.collection("labs").document(username)
     # send the labs structure to db
     labs_ref.set(labs_dict)
 
