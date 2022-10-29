@@ -87,7 +87,7 @@ def register():
             for preauthemail, preauthcohort in preauthstudents:
                 # if the email is pre-authorized
                 if email == preauthemail:
-                    user_ref = db.collection('registered').document(email)
+                    user_ref = db.collection('registered').document(username)
                     user_ref.set(
                         {
                             "email" : email,
