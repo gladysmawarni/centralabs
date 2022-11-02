@@ -3,10 +3,9 @@ import streamlit as st
 from google.cloud import firestore
 from google.oauth2 import service_account
 import json
-import plotly.graph_objects as go
-import pandas as pd
 from datetime import datetime, date
 
+from streamplot import donutplot
 
 ## ----------------------------- FUNCTIONS --------------------------------------
 def login():
@@ -52,22 +51,6 @@ def login():
                 st.session_state.labs = db.collection('labs').document(logged_user['username']).get().to_dict()     
                 return True
 
-
-## first chart - donut plot of lab's progress
-def donutplot(user_dictionary):
-    user_df = pd.DataFrame.from_dict(user_dictionary, orient='index').reset_index().rename(columns={'index':'labs', 0:'status'})
-    count_delivered = len(user_df[user_df['status'] == 'Delivered'])
-    count_not_delivered = len(user_df[user_df['status'] == 'Not delivered'])
-
-    labels = ['Delivered','Not Delivered']
-    values = [count_delivered, count_not_delivered]
-    colours = ['teal', 'lightgray']
-    legend = str(count_delivered) + '/' + str(count_not_delivered)
-
-    fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.5, pull=[0.2,0], marker=dict(colors=colours))])
-    fig.update_layout(annotations= [{'text': legend, 'font_size' : 20, 'showarrow' : False}])
-
-    st.plotly_chart(fig, use_container_width=True)
     
 ## first page - greetings
 def pageOne():
