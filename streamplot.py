@@ -44,13 +44,16 @@ def count_time(li):
 
 
 def time_of_day_chart(ref):
-    timestamps = list(ref.values())
-    lamfunctime = lambda x: int(x.split('T')[1][:2])
+    try:
+        timestamps = list(ref.values())
+        lamfunctime = lambda x: int(x.split('T')[1][:2])
 
-    timeli = list(map(lamfunctime, timestamps))
+        timeli = list(map(lamfunctime, timestamps))
 
-    result = list(map(time_classification, timeli))
-    final = count_time(result)
+        result = list(map(time_classification, timeli))
+        final = count_time(result)
+    except:
+        final = {'Morning' : 0, 'Afternoon' : 0, 'Night': 0, 'Dawn' : 0}
     
     ## plot
     fig = go.Figure()
