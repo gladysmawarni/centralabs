@@ -5,7 +5,7 @@ from google.oauth2 import service_account
 import json
 from datetime import datetime, date
 
-from streamplot import donutplot
+from streamplot import donutplot, time_of_day_chart
 
 ## ----------------------------- FUNCTIONS --------------------------------------
 def login():
@@ -48,7 +48,8 @@ def login():
                 st.session_state.name = logged_user['name']
                 st.session_state.authenticated = True
                 st.session_state.navigation = ["pageone", "pagetwo"]
-                st.session_state.labs = db.collection('labs').document(logged_user['username']).get().to_dict()     
+                st.session_state.labs = db.collection('labs').document(logged_user['username']).get().to_dict()
+                st.session_state.labstime = db.collection("time").document(logged_user['username']).get().to_dict()
                 return True
 
     
@@ -80,8 +81,8 @@ def pageTwo():
     st.header(f"{st.session_state.name}'s labs progress")
 
     donutplot(st.session_state.labs)
-
-    col1, col2 = st.columns(2)
+    time_of_day_chart(st.session_state.labstime)
+    
 
 
 
