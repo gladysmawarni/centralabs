@@ -54,7 +54,7 @@ def time_of_day_chart(ref):
     
     ## plot
     fig = go.Figure()
-    colors = ['#8abfe8', '#f5c5a0', '#5c7998', '#cc889d']
+    colors = ['rgb(237,221,206)', 'rgb(205,155,154)', '#5c7998', 'rgb(72,68,65)']
     label = ['🔆', '🌞',  '🌙' ,'⛅']
 
     for index, key in enumerate(final):
@@ -78,7 +78,7 @@ def time_of_day_chart(ref):
                     showlegend=False,
                     xaxis=dict(showgrid=False, visible= False, showticklabels= False),
                     plot_bgcolor='rgba(0,0,0,0)',
-                    height=350
+                    height=250
                     )
 
     
