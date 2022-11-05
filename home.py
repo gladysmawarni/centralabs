@@ -5,7 +5,7 @@ from google.oauth2 import service_account
 import json
 from datetime import datetime, date
 
-from streamplot import donutplot, time_of_day_chart
+from streamplot import donutplot, time_of_day_chart, day_of_week_chart, daily_line_chart
 
 ## ----------------------------- FUNCTIONS --------------------------------------
 def login():
@@ -81,6 +81,8 @@ def pageTwo():
     st.header(f"{st.session_state.name}'s labs progress")
 
     donutplot(st.session_state.labs)
+    daily_line_chart(st.session_state.labstime)
+    day_of_week_chart(st.session_state.labstime)
     time_of_day_chart(st.session_state.labstime)
     
 
@@ -88,6 +90,8 @@ def pageTwo():
 
 
 ## ------------------------------ APP -----------------------------------
+st.set_page_config(page_title='Centralabs', page_icon=':coffee:', layout="wide")
+
 selection = None
 
 # if user not logged in 

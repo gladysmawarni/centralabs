@@ -1,6 +1,8 @@
 import plotly.graph_objects as go
 import streamlit as st
 import pandas as pd
+from datetime import datetime
+import numpy as np
 
 
 ## first chart - donut plot of lab's progress
@@ -76,7 +78,8 @@ def time_of_day_chart(ref):
             )
         )
 
-    fig.update_layout(barmode='stack',
+    fig.update_layout(title = 'Time of day',
+                    barmode='stack',
                     font=dict(size=20),
                     showlegend=False,
                     xaxis=dict(showgrid=False, visible= False, showticklabels= False),
@@ -85,4 +88,77 @@ def time_of_day_chart(ref):
                     )
 
     
+    st.plotly_chart(fig, use_container_width=True)
+
+
+## day of week = horizontal bar chart
+def countday(li):
+   wdays = [datetime.strptime(i,'%Y-%m-%d').weekday() for i in li]
+
+   daydict = {0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'}
+   countdict = {'Monday' : 0, 'Tuesday' : 0, 'Wednesday': 0, 'Thursday' : 0, 'Friday' : 0, 'Saturday' : 0, 'Sunday' : 0}
+
+   for d in wdays:
+      dow = daydict[d]
+      countdict[dow] += 1
+   
+   return countdict
+
+
+def day_of_week_chart(ref):
+    timestamps = list(ref.values())
+    lamfuncdate = lambda x: x.split('T')[0]
+
+    dateli = list(map(lamfuncdate, timestamps))
+    finaldays = countday(dateli)
+
+    ## plot
+    fig = go.Figure()
+    colors = ['#FEF3D2', '#EDCFC0', '#EDC0C0', '#C3D3D6', '#D5DBE4', '#E4D5E3', '#EAEEE0']
+    label = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+    for index, key in enumerate(finaldays):
+        fig.add_trace(go.Bar(
+            y=[''],
+            x=[finaldays[key]],
+            name=key,
+            orientation='h',
+
+            texttemplate= label[index], 
+            textposition='inside',
+            insidetextanchor="middle",
+
+            marker_color= colors[index],
+            hovertemplate= "%{x}",   
+            )
+        )
+
+    fig.update_layout(title = 'Day of the week',
+                    barmode='stack',
+                    font=dict(size=20),
+                    showlegend=False,
+                    xaxis=dict(showgrid=False, visible= False, showticklabels= False),
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    height=350
+                    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+def daily_line_chart(ref):
+    timestamps = list(ref.values())
+    lamfuncdate = lambda x: x.split('T')[0]
+
+    dateli = list(map(lamfuncdate, timestamps))
+    val, count = np.unique(dateli, return_counts=True)
+    fig = go.Figure(data=go.Scatter(x=val, y=count, line_shape='spline', marker_color='#62809A'))
+
+    fig.update_layout(title = 'Daily line chart', 
+                showlegend=False,
+                font=dict(size=20),
+                xaxis=dict(showgrid=False),
+                yaxis =dict(showgrid=False, visible= False, showticklabels= False),
+                plot_bgcolor='rgba(0,0,0,0)',
+                height=400
+                )
+
     st.plotly_chart(fig, use_container_width=True)

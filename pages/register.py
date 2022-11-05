@@ -58,10 +58,10 @@ db = firestore.Client(credentials=creds, project="centralabs99")
 
 
 def register():
-    preauth = db.collection('preauthorized')
+    # preauth = db.collection('preauthorized')
 
-    # emails of pre-authorized students
-    preauthstudents = [(doc.to_dict()['email'], doc.to_dict()['cohort']) for doc in preauth.stream()]
+    # # emails of pre-authorized students
+    # preauthstudents = [(doc.to_dict()['email'], doc.to_dict()['cohort']) for doc in preauth.stream()]
  
     # registration form
     with st.form('register_form'):
@@ -71,6 +71,8 @@ def register():
         username = st.text_input('Github username').lower()
         password = st.text_input('Password', type= 'password')
         password2 = st.text_input('Re-enter Password', type= 'password')
+        cohort = st.selectbox('Select your cohort',
+                                ('DAFTOCT21','DAFTJAN22', 'DAFTAPR22', 'DAFTJUL22', 'DAFTOCT22'))
         submit = st.form_submit_button('Register')
 
     # if the user did not fill all the forms
@@ -84,33 +86,33 @@ def register():
 
         else:
             flag = False
-            for preauthemail, preauthcohort in preauthstudents:
-                # if the email is pre-authorized
-                if email == preauthemail:
-                    user_ref = db.collection('registered').document(username)
-                    user_ref.set(
-                        {
-                            "email" : email,
-                            "name" : name,
-                            "username" : username,
-                            "password" : password,
-                            "cohort" : preauthcohort
-                        }
-                    )
+            # for preauthemail, preauthcohort in preauthstudents:
+            #     # if the email is pre-authorized
+            #     if email == preauthemail:
+            user_ref = db.collection('registered').document(username)
+            user_ref.set(
+                {
+                    "email" : email,
+                    "name" : name,
+                    "username" : username,
+                    "password" : password,
+                    "cohort" : cohort
+                }
+            )
 
-                    # populate labs db
-                    populatedb(username)
+            # populate labs db
+            populatedb(username)
 
-                    st.success('Successfully registered :)')
-                    flag = True
+            st.success('Successfully registered :) Please go to the login page')
+            # flag = True
 
                      ## delete registered preauthorized email
-                    delete_query = preauth.where('email', '==', preauthemail)
-                    deleted = [doc.reference.delete() for doc in delete_query.get()]
+                    # delete_query = preauth.where('email', '==', preauthemail)
+                    # deleted = [doc.reference.delete() for doc in delete_query.get()]
 
             # if the email is not pre-authorized
-            if flag == False:
-                st.error('Email not pre-authorized.')
+            # if flag == False:
+            #     st.error('Email not pre-authorized.')
 
 
 # make a new document in the 'labs' collection for the new registered user
