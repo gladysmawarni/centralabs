@@ -103,12 +103,12 @@ def register():
 
             # populate labs db
             st.info('Fetching your data..', icon="ℹ️")
-            
+
             populatedb(username)
             user = Labs(username)
             user.refresh()
-            user.doubleCheck()
             user.getComments()
+            user.doubleCheck()
 
             st.success('Successfully registered :) Please go to the login page')
             # flag = True
