@@ -3,15 +3,17 @@ from requests.auth import HTTPBasicAuth
 import pandas as pd
 from google.cloud import firestore
 import streamlit as st
+import json
+from google.oauth2 import service_account
 
 
 
 ## prod
-# key_dict = json.loads(st.secrets["textkey"])
-# creds = service_account.Credentials.from_service_account_info(key_dict)
-# db = firestore.Client(credentials=creds, project="centralabs99")
+key_dict = json.loads(st.secrets["textkey"])
+creds = service_account.Credentials.from_service_account_info(key_dict)
+db = firestore.Client(credentials=creds, project="centralabs99")
 
-db = firestore.Client.from_service_account_json("db/firestore-key.json")
+#db = firestore.Client.from_service_account_json("db/firestore-key.json")
 cleanlabnamefunc = lambda x: x.split('ta-data-lis/')[1].split('/')[0].replace('-', '')
 
 
