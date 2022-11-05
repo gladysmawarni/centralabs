@@ -2,6 +2,7 @@ import streamlit as st
 from google.cloud import firestore
 from google.oauth2 import service_account
 import json
+from helper import Labs
 
 
 labs_dict = {'lablistcomprehensions' : 'Not delivered',
@@ -101,7 +102,13 @@ def register():
             )
 
             # populate labs db
+            st.info('Fetching your data..', icon="ℹ️")
+            
             populatedb(username)
+            user = Labs(username)
+            user.refresh()
+            user.doubleCheck()
+            user.getComments()
 
             st.success('Successfully registered :) Please go to the login page')
             # flag = True

@@ -46,16 +46,14 @@ def count_time(li):
 
 
 def time_of_day_chart(ref):
-    try:
-        timestamps = list(ref.values())
-        lamfunctime = lambda x: int(x.split('T')[1][:2])
+    timestamps = list(ref.values())
+    lamfunctime = lambda x: int(x.split('T')[1][:2])
 
-        timeli = list(map(lamfunctime, timestamps))
+    timeli = list(map(lamfunctime, timestamps))
 
-        result = list(map(time_classification, timeli))
-        final = count_time(result)
-    except:
-        final = {'Morning' : 0, 'Afternoon' : 0, 'Night': 0, 'Dawn' : 0}
+    result = list(map(time_classification, timeli))
+    final = count_time(result)
+
     
     ## plot
     fig = go.Figure()
@@ -112,6 +110,7 @@ def day_of_week_chart(ref):
     dateli = list(map(lamfuncdate, timestamps))
     finaldays = countday(dateli)
 
+
     ## plot
     fig = go.Figure()
     colors = ['#FEF3D2', '#EDCFC0', '#EDC0C0', '#C3D3D6', '#D5DBE4', '#E4D5E3', '#EAEEE0']
@@ -150,6 +149,7 @@ def daily_line_chart(ref):
 
     dateli = list(map(lamfuncdate, timestamps))
     val, count = np.unique(dateli, return_counts=True)
+    
     fig = go.Figure(data=go.Scatter(x=val, y=count, line_shape='spline', marker_color='#62809A'))
 
     fig.update_layout(title = 'Daily line chart', 

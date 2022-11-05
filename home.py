@@ -81,9 +81,12 @@ def pageTwo():
     st.header(f"{st.session_state.name}'s labs progress")
 
     donutplot(st.session_state.labs)
-    daily_line_chart(st.session_state.labstime)
-    day_of_week_chart(st.session_state.labstime)
-    time_of_day_chart(st.session_state.labstime)
+    try:
+        daily_line_chart(st.session_state.labstime)
+        day_of_week_chart(st.session_state.labstime)
+        time_of_day_chart(st.session_state.labstime)
+    except:
+        st.write('not enough data')
     
 
 
