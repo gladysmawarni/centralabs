@@ -6,8 +6,8 @@ import numpy as np
 
 
 ## first chart - donut plot of lab's progress
-def donutplot(user_dictionary):
-    user_df = pd.DataFrame.from_dict(user_dictionary, orient='index').reset_index().rename(columns={'index':'labs', 0:'status'})
+def donut_chart(ref):
+    user_df = pd.DataFrame.from_dict(ref, orient='index').reset_index().rename(columns={'index':'labs', 0:'status'})
     count_delivered = len(user_df[user_df['status'] == 'Delivered'])
     count_not_delivered = len(user_df[user_df['status'] == 'Not delivered'])
 
@@ -138,7 +138,7 @@ def day_of_week_chart(ref):
                     showlegend=False,
                     xaxis=dict(showgrid=False, visible= False, showticklabels= False),
                     plot_bgcolor='rgba(0,0,0,0)',
-                    height=350
+                    height=250
                     )
 
     st.plotly_chart(fig, use_container_width=True)

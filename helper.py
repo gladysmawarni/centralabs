@@ -19,12 +19,15 @@ cleanlabnamefunc = lambda x: x.split('ta-data-lis/')[1].split('/')[0].replace('-
 
 class Labs:
     githubusername = 'gladysmawarni'
-    githubtoken = st.secrets["github_token"]
+    #githubtoken = st.secrets["github_token"]
+    githubtoken = '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'
 
+    ### -------------
     def __init__(self, username) -> None:
         self.username = username
     
     def __getDB(self, collection):
+        """Get data from firebase, params = name of collection, username (key)"""
         return db.collection(collection).document(self.username)
     
     def __getPR(self, state):
@@ -34,7 +37,6 @@ class Labs:
         response = requests.get(url=url, params= params, auth= HTTPBasicAuth(self.githubusername, self.githubtoken))
         return response.json()['items']
 
-    
     def __updateLabsStatus(self, lablist):
         user_lab_ref = self.__getDB('labs')
         user_time_ref =self.__getDB('time')
@@ -124,14 +126,22 @@ class Labs:
 
 
 
-if __name__ == '__main__':
-    # all the users who registered
-    users = db.collection('registered')
-    # list of registered username
-    usernames = [user.to_dict()['username'] for user in users.stream()]
+weeklylabsdict = {'week1' : ['lablistcomprehensions', 'labtuplesetdict', 'labstringoperations', 'labnumpy', 'labintropandas'],
+'week2' : ['labmysqlfirstqueries', 'labmysqlselect', 'labmysql', 'labdataframecalculations', 'labadvancedpandas', 'labimportexport', 'labdatacleaning', 'lablambdafunctions'],
+'week3' : ['labapiscavenger', 'labwebscraping', 'labpandasdeepdive', 'labadvancedregex', 'labmatplotlibseaborn'],
+'week4' : ['labintrobitableau', 'labbianalysistableau', 'labpivottableandcorrelation', 'DescriptiveStats', 'labregressionanalysis', 'labsubsettinganddescriptivestats'],
+'week5' : ['labintroprob', 'labprobabilitydistributions', 'M2miniproject2', 'labconfidenceintervals', 'labhypothesistesting1', 'labhypothesistesting2', 'labintrotoscipy', 'labtwosamplehyptest', 'labgoodfitindeptests'],
+'week7' : ['labintrotoml', 'labsupervisedlearningfeatureextraction', 'labsupervisedlearning', 'labsupervisedlearningsklearn', 'labimbalance', 'labproblemsinml'],
+'week8' : ['labunsupervisedlearning', 'labunsupervisedlearningandsklearn', 'labdeeplearning', 'labnlp']}
 
-    for user in usernames:
-        user = Labs(user)
-        #user.refresh()
-        user.doubleCheck()
-        # user.getComments()
+def weekly_progress(ref):
+    final = {}
+
+    for i in ['week1', 'week2', 'week3', 'week4', 'week5', 'week7', 'week8']:
+        cnt = len([labname for labname in weeklylabsdict[i] if labname in ref.keys()])
+        cntweek = f"{cnt} / {len(weeklylabsdict[i])}"
+        final[i] = cntweek
+
+
+    return pd.DataFrame.from_dict(final, orient='index', columns=['progress'])
+

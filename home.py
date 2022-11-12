@@ -4,8 +4,10 @@ from google.cloud import firestore
 from google.oauth2 import service_account
 import json
 from datetime import datetime, date
+import pandas as pd
 
-from streamplot import donutplot, time_of_day_chart, day_of_week_chart, daily_line_chart
+from streamplot import donut_chart, time_of_day_chart, day_of_week_chart, daily_line_chart
+from helper import weekly_progress
 
 ## ----------------------------- FUNCTIONS --------------------------------------
 def login():
@@ -47,14 +49,15 @@ def login():
                 ## session state
                 st.session_state.name = logged_user['name']
                 st.session_state.authenticated = True
-                st.session_state.navigation = ["pageone", "pagetwo"]
+                st.session_state.navigation = ["hello", "overview", "comments"]
                 st.session_state.labs = db.collection('labs').document(logged_user['username']).get().to_dict()
                 st.session_state.labstime = db.collection("time").document(logged_user['username']).get().to_dict()
+                st.session_state.comments = db.collection("comments").document(logged_user['username']).get().to_dict()
                 return True
 
     
 ## first page - greetings
-def pageOne():
+def hello():
     currentTime = datetime.now()
     if currentTime.hour < 12:
         greeting ='Good morning,'
@@ -63,7 +66,7 @@ def pageOne():
     else:
         greeting = 'Good evening,'
 
-    st.header(f'{greeting} *{st.session_state.name}*!')
+    st.header(f'{greeting} *{(st.session_state.name.title())}*!')
 
     today = date.today()
     d1 = today.strftime("%B %d, %Y")
@@ -76,17 +79,37 @@ def pageOne():
         for key in st.session_state.keys():
             del st.session_state[key]
 
-## second page
-def pageTwo():
-    st.header(f"{st.session_state.name}'s labs progress")
+## second page - overview
+def overview():
+    st.header(f"{(st.session_state.name).title()}'s labs overview")
 
-    donutplot(st.session_state.labs)
+    col1, col2 = st.columns([2,1])
+
+    with col1:
+        donut_chart(st.session_state.labs)
+    with col2:
+        '\n' 
+        '\n'
+        '\n'
+        '\n'
+        '\n'
+        st.write(weekly_progress(st.session_state.labstime))
+        
     try:
         daily_line_chart(st.session_state.labstime)
         day_of_week_chart(st.session_state.labstime)
         time_of_day_chart(st.session_state.labstime)
     except:
         st.write('not enough data')
+
+## third page - comments
+def comments():
+    st.header(f"{(st.session_state.name).title()}'s labs comments")
+
+    for i in st.session_state.comments:
+        st.header(i)
+        st.markdown(st.session_state.comments[i])
+
     
 
 
@@ -105,14 +128,17 @@ if "navigation" not in st.session_state:
 if "authenticated" not in st.session_state:
     selection = st.sidebar.radio("", st.session_state.navigation)
     if login():
-        st.session_state.navigation = ["pageone", "pagetwo"]
+        st.session_state.navigation = ["hello", "overview", "comments"]
 
 # if user logged in
 if "authenticated" in st.session_state and st.session_state.authenticated == True:
     selection = st.sidebar.radio("", st.session_state.navigation)
 
-if selection == "pageone":
-    pageOne()
+if selection == "hello":
+    hello()
 
-if selection == "pagetwo":
-    pageTwo()
+if selection == "overview":
+    overview()
+
+if selection == "comments":
+    comments()

@@ -59,8 +59,6 @@ db = firestore.Client(credentials=creds, project="centralabs99")
 
 
 def register():
-    # preauth = db.collection('preauthorized')
-
     # # emails of pre-authorized students
     # preauthstudents = [(doc.to_dict()['email'], doc.to_dict()['cohort']) for doc in preauth.stream()]
  
@@ -86,10 +84,6 @@ def register():
             st.error('Password does not match')
 
         else:
-            flag = False
-            # for preauthemail, preauthcohort in preauthstudents:
-            #     # if the email is pre-authorized
-            #     if email == preauthemail:
             user_ref = db.collection('registered').document(username)
             user_ref.set(
                 {
@@ -111,15 +105,10 @@ def register():
             user.doubleCheck()
 
             st.success('Successfully registered :) Please go to the login page')
-            # flag = True
 
-                     ## delete registered preauthorized email
-                    # delete_query = preauth.where('email', '==', preauthemail)
-                    # deleted = [doc.reference.delete() for doc in delete_query.get()]
-
-            # if the email is not pre-authorized
-            # if flag == False:
-            #     st.error('Email not pre-authorized.')
+                ## delete registered preauthorized email
+            # delete_query = preauth.where('email', '==', preauthemail)
+            # deleted = [doc.reference.delete() for doc in delete_query.get()]
 
 
 # make a new document in the 'labs' collection for the new registered user
