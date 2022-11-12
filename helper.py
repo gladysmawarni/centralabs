@@ -145,3 +145,8 @@ def weekly_progress(ref):
 
     return pd.DataFrame.from_dict(final, orient='index', columns=['progress'])
 
+def weekly_table(ref, num):
+    names = [labname for labname in weeklylabsdict[num]]
+    status = [ref[labname].split('T')[0] if labname in ref.keys() else 'Not Delivered' for labname in weeklylabsdict[num]]
+
+    return pd.DataFrame(list(zip(names, status)), columns=[f'Labs {num.title()}', 'Date Submitted'])

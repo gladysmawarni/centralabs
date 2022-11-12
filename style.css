@@ -1,0 +1,14 @@
+.highlight {
+    border-radius: 0.4rem;
+    color: black;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+.ok {
+background-color: rgb(221, 255, 207);
+}
+
+.notok {
+    background-color: rgb(250, 243, 207);
+}

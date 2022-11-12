@@ -7,7 +7,7 @@ from datetime import datetime, date
 import pandas as pd
 
 from streamplot import donut_chart, time_of_day_chart, day_of_week_chart, daily_line_chart
-from helper import weekly_progress
+from helper import weekly_progress, weekly_table
 
 ## ----------------------------- FUNCTIONS --------------------------------------
 def login():
@@ -94,6 +94,15 @@ def overview():
         '\n'
         '\n'
         st.write(weekly_progress(st.session_state.labstime))
+    
+    coll1, coll2, coll3 = st.columns([1,1,1])
+    
+    with coll2: 
+        weeknumopt = st.selectbox(
+        'select a week',
+        ('week1', 'week2', 'week3', 'week4', 'week5', 'week7', 'week8'))
+
+        st.write(weekly_table(st.session_state.labstime, weeknumopt))
         
     try:
         daily_line_chart(st.session_state.labstime)
@@ -102,16 +111,27 @@ def overview():
     except:
         st.write('not enough data')
 
+
 ## third page - comments
+def load_css():
+    with open('style.css') as f:
+        st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
+
 def comments():
     st.header(f"{(st.session_state.name).title()}'s labs comments")
 
+    load_css()
     for i in st.session_state.comments:
-        st.header(i)
-        st.markdown(st.session_state.comments[i])
+        if '👌🏻' in st.session_state.comments[i]:
+            st.subheader(i)
+            text = f"<div class= 'highlight ok'>{st.session_state.comments[i]}</div>"
+            st.markdown(text, unsafe_allow_html=True)
+        else:
+            st.subheader(i)
+            text = f"<div class= 'highlight notok'>{st.session_state.comments[i]}</div>"
+            st.markdown(text, unsafe_allow_html=True)
 
     
-
 
 
 
