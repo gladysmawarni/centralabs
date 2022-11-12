@@ -19,8 +19,8 @@ cleanlabnamefunc = lambda x: x.split('ta-data-lis/')[1].split('/')[0].replace('-
 
 class Labs:
     githubusername = 'gladysmawarni'
-    #githubtoken = st.secrets["github_token"]
-    githubtoken = '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'
+    githubtoken = st.secrets["github_token"]
+
 
     ### -------------
     def __init__(self, username) -> None:
