@@ -65,11 +65,11 @@ def register():
     # registration form
     with st.form('register_form'):
         st.subheader('Registration')
-        email = st.text_input('Email')
-        name = st.text_input('Full Name').lower()
-        username = st.text_input('Github username').lower()
-        password = st.text_input('Password', type= 'password')
-        password2 = st.text_input('Re-enter Password', type= 'password')
+        email = st.text_input('Email').strip()
+        name = st.text_input('Full Name').lower().strip()
+        username = st.text_input('Github username').lower().strip()
+        password = st.text_input('Password', type= 'password').strip()
+        password2 = st.text_input('Re-enter Password', type= 'password').strip()
         cohort = st.selectbox('Select your cohort',
                                 ('DAFTOCT21','DAFTJAN22', 'DAFTAPR22', 'DAFTJUL22', 'DAFTOCT22'))
         submit = st.form_submit_button('Register')
