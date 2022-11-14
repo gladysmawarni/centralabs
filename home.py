@@ -106,16 +106,19 @@ def hello():
         submit_stat = st.button('Share your status')
 
         if submit_stat:
-            user_stat_ref = db.collection('status').document(d1).collection(st.session_state.cohort).document(st.session_state.username)
-            user_stat_ref.set(
-                {
-                    "name" : st.session_state.name,
-                    "mood" : mood,
-                    "song" : song
-                }
-            )
+            if (len(song) < 1) or ('spotify' not in song):
+                st.error('please put a spotify song link')
+            else:
+                user_stat_ref = db.collection('status').document(d1).collection(st.session_state.cohort).document(st.session_state.username)
+                user_stat_ref.set(
+                    {
+                        "name" : st.session_state.name,
+                        "mood" : mood,
+                        "song" : song
+                    }
+                )
 
-            st.success('Your status is updated!')
+                st.success('Your status is updated!')
 
     logout = st.sidebar.button('goodbye')
 
