@@ -19,18 +19,20 @@ cleanlabnamefunc = lambda x: x.split('ta-data-lis/')[1].split('/')[0].replace('-
 
 class Labs:
     githubusername = 'gladysmawarni'
-    githubtoken = st.secrets["github_token"]
+    #githubtoken = st.secrets["github_token"]
+    githubtoken = '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'
 
 
-    ### -------------
+    ### ------------- private functions ---------------
     def __init__(self, username) -> None:
         self.username = username
     
     def __getDB(self, collection):
-        """Get data from firebase, params = name of collection, username (key)"""
+        """fetch data from a specific collection in database"""
         return db.collection(collection).document(self.username)
     
     def __getPR(self, state):
+        """fetch pull request data of the user, either open or closed"""
         url = 'https://api.github.com/search/issues'
         params= {'q': f'state:{state} author:{self.username} type:pr', 'per_page': 100}
 
@@ -38,6 +40,7 @@ class Labs:
         return response.json()['items']
 
     def __updateLabsStatus(self, lablist):
+        """update labs status"""
         user_lab_ref = self.__getDB('labs')
         user_time_ref =self.__getDB('time')
 
@@ -45,27 +48,9 @@ class Labs:
             user_lab_ref.update({labname : 'Delivered'})
             user_time_ref.set({labname : time}, merge=True)
             print(self.username + ' : ' + labname)
-
-
-    def refresh(self):
-        user_pr = self.__getPR('open')
-
-        try:
-            labnames = [i['pull_request']['url'] for i in user_pr if 'ta-data-lis' in i['pull_request']['url']]
-
-            # map to apply to all at once
-            cleanlabsname = list(map(cleanlabnamefunc, labnames))
-
-            timestamp = [i['created_at'][:-1] for i in user_pr]
-            lablist = list(zip(cleanlabsname, timestamp))
-
-            self.__updateLabsStatus(lablist)
-        except:
-            print('no pr yet')
-            pass
-
-
+    
     def __updateLabsComments(self,closedprlist):
+        """get TA comments from github"""
         user_ref = self.__getDB('comments')
         try:
             done = list(user_ref.get().to_dict().keys())
@@ -92,13 +77,36 @@ class Labs:
                     pass
 
     
+    ## ------------ functions to use ------------------
+
+    def refresh(self):
+        """fetch data from github and update DB if there's a new PR"""
+        user_pr = self.__getPR('open')
+
+        try:
+            labnames = [i['pull_request']['url'] for i in user_pr if 'ta-data-lis' in i['pull_request']['url']]
+
+            # map to apply to all at once
+            cleanlabsname = list(map(cleanlabnamefunc, labnames))
+
+            timestamp = [i['created_at'][:-1] for i in user_pr]
+            lablist = list(zip(cleanlabsname, timestamp))
+
+            self.__updateLabsStatus(lablist)
+        except:
+            print('no pr yet')
+            pass
+
+    
     def getComments(self):
+        """fetch comments from github to save in DB"""
         closedpr = self.__getPR('closed')
         closedprlist = [pr['timeline_url'] for pr in closedpr]
         self.__updateLabsComments(closedprlist)
     
 
     def doubleCheck(self):
+        """check if there's any labs that is skipped and not updated in the DB"""
         user_lab_ref = self.__getDB('labs')
         user_time_ref = self.__getDB('time')
 

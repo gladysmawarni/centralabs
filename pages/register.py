@@ -104,7 +104,7 @@ def register():
             user.getComments()
             user.doubleCheck()
 
-            st.success('Successfully registered :) Please go to the login page')
+            st.success('Successfully registered :) Please go to the home page')
 
                 ## delete registered preauthorized email
             # delete_query = preauth.where('email', '==', preauthemail)
