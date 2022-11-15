@@ -146,12 +146,16 @@ def weekly_progress(ref):
     final = {}
 
     for i in ['week1', 'week2', 'week3', 'week4', 'week5', 'week7', 'week8']:
-        cnt = len([labname for labname in weeklylabsdict[i] if labname in ref.keys()])
+        try:
+            cnt = len([labname for labname in weeklylabsdict[i] if labname in ref.keys()])
+        except:
+            cnt = 0
+
         cntweek = f"{cnt} / {len(weeklylabsdict[i])}"
         final[i] = cntweek
 
-
     return pd.DataFrame.from_dict(final, orient='index', columns=['progress'])
+
 
 def weekly_table(ref, num):
     names = [labname for labname in weeklylabsdict[num]]

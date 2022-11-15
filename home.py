@@ -30,8 +30,8 @@ def login():
     # login form
     with st.form('login_form'):
         st.subheader('Login')
-        username = st.text_input('username')
-        password = st.text_input('Password', type= 'password')
+        username = st.text_input('username').lower().strip()
+        password = st.text_input('Password', type= 'password').strip()
         submit = st.form_submit_button('Login')
 
     # if the user did not fill all fields
