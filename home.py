@@ -7,8 +7,8 @@ from datetime import datetime, date
 import pandas as pd
 import streamlit.components.v1 as components
 
-from streamplot import donut_chart, time_of_day_chart, day_of_week_chart, daily_line_chart
-from helper import weekly_progress, weekly_table
+from helpercode.streamplot import donut_chart, time_of_day_chart, day_of_week_chart, daily_line_chart
+from helpercode.labs import weekly_progress, weekly_table
 
 ## ----------------------------- DATABASE --------------------------------------
 ## dev
