@@ -18,7 +18,13 @@ cleanlabnamefunc = lambda x: x.split('ta-data-lis/')[1].split('/')[0].replace('-
 
 class Labs:
     githubusername = 'gladysmawarni'
-    githubtoken = st.secrets["github_token"]
+
+    # ## prod
+    # githubtoken = st.secrets["github_token"]
+    ## dev
+    with open('./db/githubapi-key.json') as data_file:
+        cred = json.load(data_file)
+    githubtoken = cred["password"]
 
 
     ### ------------- private functions ---------------
@@ -152,6 +158,7 @@ class Labs:
 
 
 
+## ----------- weekly functions ---------------
 weeklylabsdict = {'week1' : ['lablistcomprehensions', 'labtuplesetdict', 'labstringoperations', 'labnumpy', 'labintropandas'],
 'week2' : ['labmysqlfirstqueries', 'labmysqlselect', 'labmysql', 'labdataframecalculations', 'labadvancedpandas', 'labimportexport', 'labdatacleaning', 'lablambdafunctions'],
 'week3' : ['labapiscavenger', 'labwebscraping', 'labpandasdeepdive', 'labadvancedregex', 'labmatplotlibseaborn'],
