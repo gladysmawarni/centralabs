@@ -170,7 +170,7 @@ def daily_line_chart(ref):
 def progress_bar_chart(df):
     fig = go.Figure()
     fig.add_trace(go.Bar(x =df['Student'], y= df['Delivered'], hovertext= df['Percentage'],
-                        texttemplate = "%{y} / 42 =<br>%{hovertext}",
+                        texttemplate = "%{y} / 43 =<br>%{hovertext}",
                         textfont_color="white"))
     fig.update_layout(yaxis_range=[0,43])
     fig.update_traces(marker_color='rgb(250, 175, 196)', marker_line_color='rgb(250, 100, 142)',
