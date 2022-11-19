@@ -118,7 +118,7 @@ class Labs:
     def getComments(self):
         """fetch comments from github to save in DB"""
         closedpr = self.__getPR('closed')
-        closedprlist = [pr['timeline_url'] for pr in closedpr]
+        closedprlist = [pr['timeline_url'] for pr in closedpr if 'ta-data-lis' in pr['timeline_url']]
 
         cleanlabsname = list(map(cleanlabnamefunc, closedprlist))
 
