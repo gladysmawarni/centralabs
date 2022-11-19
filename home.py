@@ -5,6 +5,7 @@ from google.oauth2 import service_account
 import json
 
 from helpercode.user import login, hello, overview, comments, status
+from helpercode.admin import student_progress
 
 ## ----------------------------- DATABASE --------------------------------------
 ## dev
@@ -44,7 +45,7 @@ if "authenticated" in st.session_state and st.session_state.authenticated == Tru
         if selection == "hello 👋":
             hello()
         if selection == "students progress 📊":
-            print('to do')
+            student_progress()
         if selection == "status 💭":
             status()
     else:

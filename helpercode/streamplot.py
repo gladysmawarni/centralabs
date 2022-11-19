@@ -5,6 +5,7 @@ from datetime import datetime
 import numpy as np
 
 
+### ------------------- student page -------------------------
 ## first chart - donut plot of lab's progress
 def donut_chart(ref):
     user_df = pd.DataFrame.from_dict(ref, orient='index').reset_index().rename(columns={'index':'labs', 0:'status'})
@@ -162,3 +163,29 @@ def daily_line_chart(ref):
                 )
 
     st.plotly_chart(fig, use_container_width=True)
+
+
+### ----------------- admin page ----------------------------
+## bar chart - student progress
+def progress_bar_chart(df):
+    fig = go.Figure()
+    fig.add_trace(go.Bar(x =df['Student'], y= df['Delivered'], hovertext= df['Percentage'],
+                        texttemplate = "%{y} / 42 =<br>%{hovertext}",
+                        textfont_color="white"))
+    fig.update_layout(yaxis_range=[0,43])
+    fig.update_traces(marker_color='rgb(250, 175, 196)', marker_line_color='rgb(250, 100, 142)',
+                    marker_line_width=1.5, opacity=0.6)
+
+    fig.add_trace(go.Scatter(x= df['Student'], y=[31 for i in df['Student']], mode = 'lines', line=dict(color="rgb(137, 94, 189)")))
+
+    fig.update_layout(title = 'Student Progress', 
+            showlegend=False,
+            font=dict(size=13),
+            xaxis=dict(showgrid=False),
+            yaxis =dict(showgrid=False),
+            plot_bgcolor='rgba(0,0,0,0)',
+            height=500
+            )
+
+    st.plotly_chart(fig, use_container_width=True)
+

@@ -21,7 +21,7 @@ class Labs:
 
     ## prod
     githubtoken = st.secrets["github_token"]
-    # ## dev
+    ## dev
     # with open('./db/githubapi-key.json') as data_file:
     #     cred = json.load(data_file)
     # githubtoken = cred["password"]
