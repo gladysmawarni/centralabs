@@ -28,7 +28,7 @@ if "navigation" not in st.session_state:
     selection = st.session_state.navigation
 
 if "authenticated" not in st.session_state:
-    selection = st.sidebar.radio("", st.session_state.navigation)
+    selection = st.sidebar.radio("navigation", st.session_state.navigation)
     if login():
         ## user / admin
         if st.session_state.username == 'gladysmawarni':
@@ -38,7 +38,7 @@ if "authenticated" not in st.session_state:
 
 # if user logged in
 if "authenticated" in st.session_state and st.session_state.authenticated == True:
-    selection = st.sidebar.radio("", st.session_state.navigation)
+    selection = st.sidebar.radio("navigation", st.session_state.navigation)
 
     # user / admin
     if st.session_state.username == 'gladysmawarni':

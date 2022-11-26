@@ -167,12 +167,12 @@ weeklylabsdict = {'week1' : ['lablistcomprehensions', 'labtuplesetdict', 'labstr
 'week7' : ['labintrotoml', 'labsupervisedlearningfeatureextraction', 'labsupervisedlearning', 'labsupervisedlearningsklearn', 'labimbalance', 'labproblemsinml'],
 'week8' : ['labunsupervisedlearning', 'labunsupervisedlearningandsklearn', 'labdeeplearning', 'labnlp']}
 
-def weekly_progress(ref):
+def weekly_progress(dic):
     final = {}
 
     for i in ['week1', 'week2', 'week3', 'week4', 'week5', 'week7', 'week8']:
         try:
-            cnt = len([labname for labname in weeklylabsdict[i] if labname in ref.keys()])
+            cnt = len([labname for labname in weeklylabsdict[i] if labname in dic.keys()])
         except:
             cnt = 0
 
@@ -182,8 +182,9 @@ def weekly_progress(ref):
     return pd.DataFrame.from_dict(final, orient='index', columns=['progress'])
 
 
-def weekly_table(ref, num):
+def weekly_table(dic, num):
     names = [labname for labname in weeklylabsdict[num]]
-    status = [ref[labname].split('T')[0] if labname in ref.keys() else 'Not Delivered' for labname in weeklylabsdict[num]]
+    status = [dic[labname].split('T')[0] if labname in dic.keys() else 'Not Delivered' for labname in weeklylabsdict[num]]
 
     return pd.DataFrame(list(zip(names, status)), columns=[f'Labs {num.title()}', 'Date Submitted'])
+

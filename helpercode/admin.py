@@ -37,12 +37,58 @@ def df_progress(cohort):
     return df.rename(columns={0:'Student', 1:'Delivered', 2:'Not delivered', 3:'Percentage'})
 
 
-# page
+weeklylabsdict = {'week1' : ['lablistcomprehensions', 'labtuplesetdict', 'labstringoperations', 'labnumpy', 'labintropandas'],
+'week2' : ['labmysqlfirstqueries', 'labmysqlselect', 'labmysql', 'labdataframecalculations', 'labadvancedpandas', 'labimportexport', 'labdatacleaning', 'lablambdafunctions'],
+'week3' : ['labapiscavenger', 'labwebscraping', 'labpandasdeepdive', 'labadvancedregex', 'labmatplotlibseaborn'],
+'week4' : ['labintrobitableau', 'labbianalysistableau', 'labpivottableandcorrelation', 'DescriptiveStats', 'labregressionanalysis', 'labsubsettinganddescriptivestats'],
+'week5' : ['labintroprob', 'labprobabilitydistributions', 'M2miniproject2', 'labconfidenceintervals', 'labhypothesistesting1', 'labhypothesistesting2', 'labintrotoscipy', 'labtwosamplehyptest', 'labgoodfitindeptests'],
+'week7' : ['labintrotoml', 'labsupervisedlearningfeatureextraction', 'labsupervisedlearning', 'labsupervisedlearningsklearn', 'labimbalance', 'labproblemsinml'],
+'week8' : ['labunsupervisedlearning', 'labunsupervisedlearningandsklearn', 'labdeeplearning', 'labnlp']}
+
+
+def weekly_review_progress(cohort, num):
+    students = db.collection('registered')
+    students_username = [i.to_dict()['username'] for i in students.where('cohort', '==', cohort).get() if i.to_dict()['username'] != 'gladysmawarni']
+
+    final_dict = {}
+    for student in students_username:
+        user_labs = db.collection('labs').document(student).get().to_dict()
+        user_comments = db.collection('comments').document(student).get().to_dict()
+
+        delivered = set([stat for stat in user_labs.keys() if (user_labs[stat] == 'Delivered') & (stat in weeklylabsdict[num])])
+        not_delivered = set([stat for stat in user_labs.keys() if (user_labs[stat] == 'Not delivered') & (stat in weeklylabsdict[num])])
+        commented = set([stat for stat in user_comments.keys() if (stat in weeklylabsdict[num])])
+
+        # delivered no comment
+        deliv_nocomm = {name: '🌓' for name in (delivered - commented)}
+        # delivered and commented
+        deliv_yescomm = {name: '🌕' for name in (delivered - (delivered-commented))}
+        # not delivered
+        notdeliv = {name: '🌑' for name in not_delivered}
+
+        notdeliv.update(deliv_nocomm)
+        notdeliv.update(deliv_yescomm)
+
+        final_dict.update({student : notdeliv})
+
+    return final_dict
+
+
+## ----------------------------- PAGE -------------------------------------------
 def student_progress():
-    option = st.selectbox(
+    cohort= st.selectbox(
         "Select a cohort",
         ("DAFTOCT21", "DAFTJAN22", "DAFTAPR22", "DAFTJUL22", "DAFTOCT22"))
 
-    studentprogdf = df_progress(option)
+    studentprogdf = df_progress(cohort)
     progress_bar_chart(studentprogdf)
+
+    week = st.selectbox(
+        "Select a week",
+        ("week1", "week2", "week3", "week4", "week5", "week7", "week8"))
+
+    overviewweek = weekly_review_progress(cohort, week)
+    st.dataframe(data = pd.DataFrame(overviewweek), use_container_width= True)
+
+
 
