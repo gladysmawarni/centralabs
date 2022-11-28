@@ -20,11 +20,11 @@ class Labs:
     githubusername = 'gladysmawarni'
 
     ## prod
-    #githubtoken = st.secrets["github_token"]
+    githubtoken = st.secrets["github_token"]
     ## dev
-    with open('./db/githubapi-key.json') as data_file:
-        cred = json.load(data_file)
-    githubtoken = cred["password"]
+    # with open('./db/githubapi-key.json') as data_file:
+    #     cred = json.load(data_file)
+    # githubtoken = cred["password"]
 
 
     ### ------------- private functions ---------------
