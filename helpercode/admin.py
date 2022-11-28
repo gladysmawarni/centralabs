@@ -4,8 +4,10 @@ from google.cloud import firestore
 from google.oauth2 import service_account
 import json
 import pandas as pd
+import time
 
 from helpercode.streamplot import progress_bar_chart
+from helpercode.labs import Labs
 
 ## ----------------------------- DATABASE --------------------------------------
 ## dev
@@ -80,6 +82,7 @@ def student_progress():
         "Select a cohort",
         ("DAFTOCT21", "DAFTJAN22", "DAFTAPR22", "DAFTJUL22", "DAFTOCT22"))
 
+
     studentprogdf = df_progress(cohort)
     progress_bar_chart(studentprogdf)
 
@@ -89,6 +92,29 @@ def student_progress():
 
     overviewweek = weekly_review_progress(cohort, week)
     st.dataframe(data = pd.DataFrame(overviewweek), use_container_width= True)
+    st.caption('🌑 - Not delivered 🌓 - Delivered + Not yet reviewed  🌕 - Delivered + Reviewed')
+
+    if st.button("refresh"):
+        # all the users who registered
+        users = db.collection('registered')
+         # list of registered username
+        usernames = [user.to_dict()['username'] for user in users.stream() if (user.to_dict()['cohort'] == 'DAFTOCT22') & (user.to_dict()['username'] != 'gladysmawarni')]
+
+        progressbar = st.progress(0)
+
+        count = 0
+        for user in usernames: 
+            print(user)
+            time.sleep(5)
+            user = Labs(user)
+            user.refresh()
+            user.getComments()
+            count += int(100/len(usernames))
+            progressbar.progress(count)
+
+        progressbar.progress(100)
+        st.success('all data updated!')
+    
 
 
 
