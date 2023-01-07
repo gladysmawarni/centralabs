@@ -27,9 +27,13 @@ The `overview 👀` page of the app allows students to view their overall progre
 
 
 In the `comments 💡` page, students can view all the comments that I have posted in one place rather than having to go to GitHub and check pull request comments individually.
+![streamlit-home-2023-01-07-14-01-90](https://user-images.githubusercontent.com/78975611/211155266-575b8e5f-5b46-4577-a5d6-3fe4a41feca5.gif)
+
 
 
 In the `hello 👋` page, students have the option to share their daily feelings and song recommendations with their classmates. The `status 💭` page is refreshed daily and allows students to see what their peers have shared. 
+![streamlit-home-2023-01-07-14-01-12](https://user-images.githubusercontent.com/78975611/211155383-5792849b-6396-4bcb-bc10-fbad5d473bb1.gif)
+
 
 
 
