@@ -129,32 +129,54 @@ class Labs:
 
     def doubleCheck(self):
         """check if there's any labs that is skipped and not updated in the DB"""
-        user_lab_ref = self.__getDB('labs')
-        user_time_ref = self.__getDB('time')
+        try:
+            user_lab_ref = self.__getDB('labs')
+            user_time_ref = self.__getDB('time')
 
-        timelabs = list(user_time_ref.get().to_dict().keys())
+            timelabs = list(user_time_ref.get().to_dict().keys())
 
-        userlabs = user_lab_ref.get().to_dict()
-        deliveredlabs =[labname for labname in userlabs if userlabs[labname] == 'Delivered']
+            userlabs = user_lab_ref.get().to_dict()
+            deliveredlabs =[labname for labname in userlabs if userlabs[labname] == 'Delivered']
 
-        closedpr = self.__getPR('closed')
-        labnames = [i['pull_request']['url'] for i in closedpr if 'ta-data-lis' in i['pull_request']['url']]
-        # map to apply to all at once
-        cleanlabsname = list(map(cleanlabnamefunc, labnames))
+            closedpr = self.__getPR('closed')
+            labnames = [i['pull_request']['url'] for i in closedpr if 'ta-data-lis' in i['pull_request']['url']]
+            # map to apply to all at once
+            cleanlabsname = list(map(cleanlabnamefunc, labnames))
 
-        timestamp = [i['created_at'][:-1] for i in closedpr]
-        lablist = list(zip(cleanlabsname, timestamp))
+            timestamp = [i['created_at'][:-1] for i in closedpr]
+            lablist = list(zip(cleanlabsname, timestamp))
 
-        closedprdf= pd.DataFrame(lablist, columns=['name', 'time'])
-        finaldf = closedprdf[(~closedprdf['name'].isin(timelabs)) | (~closedprdf['name'].isin(deliveredlabs))]
+            closedprdf= pd.DataFrame(lablist, columns=['name', 'time'])
+            finaldf = closedprdf[(~closedprdf['name'].isin(timelabs)) | (~closedprdf['name'].isin(deliveredlabs))]
 
-        if len(finaldf) > 0 :
-            for labname, labtime in finaldf[['name', 'time']].values:
-                user_lab_ref.update({labname : 'Delivered'})
-                user_time_ref.set({labname : labtime}, merge=True)
-                print('updated: ', self.username + ' : ' + labname)
-        else:
-            print('everything is fine')
+            if len(finaldf) > 0 :
+                for labname, labtime in finaldf[['name', 'time']].values:
+                    user_lab_ref.update({labname : 'Delivered'})
+                    user_time_ref.set({labname : labtime}, merge=True)
+                    print('updated: ', self.username + ' : ' + labname)
+            else:
+                print('everything is fine')
+        
+        except:
+            user_pr = self.__getPR('closed')
+            user_lab_ref = self.__getDB('labs').get().to_dict()
+
+            indb =[labname for labname in user_lab_ref if user_lab_ref[labname] == 'Delivered']
+
+            labnames = [i['pull_request']['url'] for i in user_pr if 'ta-data-lis' in i['pull_request']['url']]
+            # map to apply to all at once
+            cleanlabsname = list(map(cleanlabnamefunc, labnames))
+
+            timestamp = [i['created_at'][:-1] for i in user_pr]
+            lablist = list(zip(cleanlabsname, timestamp))
+
+            notindb = [(name, time) for name, time in lablist if name not in indb]
+
+            if len(notindb) > 0:
+                self.__updateLabsStatus(notindb)
+            else:
+                print('closed pr is in db')
+            
 
 
 
