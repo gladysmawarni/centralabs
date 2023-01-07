@@ -92,7 +92,7 @@ def student_progress():
 
     overviewweek = weekly_review_progress(cohort, week)
     st.dataframe(data = pd.DataFrame(overviewweek), use_container_width= True)
-    st.caption('🌑 - Not delivered 🌓 - Delivered + Not yet reviewed  🌕 - Delivered + Reviewed')
+    st.caption('🌑 - Not delivered 🌓 - Delivered + Not reviewed  🌕 - Delivered + Reviewed')
 
     if st.button("refresh"):
         # all the users who registered

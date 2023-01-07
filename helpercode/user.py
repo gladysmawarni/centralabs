@@ -28,6 +28,9 @@ def login():
     # list of registered emails
     usernames = [user.to_dict()['username'] for user in users.stream()]
 
+    # check demo on the side
+    st.write('Here for the demo? Check the [student demo](http://centralabs.streamlit.app/student_demo) or [admin demo](http://centralabs.streamlit.app/admin_demo) 😊')
+
     # login form
     with st.form('login_form'):
         st.subheader('Login')
