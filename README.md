@@ -1,4 +1,4 @@
-### You can see the app [Here](centralabs.streamlit.app)
+### You can see the app [Here](https://centralabs.streamlit.app/)
 # Back Story 
 
 I made this app when I was the Teacher Assistant (TA) in [Ironhack Portugal](https://www.ironhack.com/) Data Analytics course. 
@@ -23,14 +23,20 @@ That's why I built this Streamlit app, which uses [Cloud Firestore](https://fire
 
 # Students Side
 The `overview 👀` page of the app allows students to view their overall progress (as a percentage of labs completed) and a detailed view by week. They can also see their submission behavior, including the number of labs submitted per day and their most productive day and time.
+![streamlit-home-2023-01-07-13-01-19](https://user-images.githubusercontent.com/78975611/211154571-2914666f-2c37-4b2b-bc1c-a07e04fa2a78.gif)
+
 
 In the `comments 💡` page, students can view all the comments that I have posted in one place rather than having to go to GitHub and check pull request comments individually.
 
+
 In the `hello 👋` page, students have the option to share their daily feelings and song recommendations with their classmates. The `status 💭` page is refreshed daily and allows students to see what their peers have shared. 
+
 
 
 # Admin Side
 I created the admin page to make my job as a TA easier. It is only accessible to me and allows me to easily track the progress of all students. In the `students progress 📊` page I can see the overall progress of each student and quickly identify anyone who is falling behind or has already met the minimum requirement.
 I can also view a detailed view of all students' progress by week, which helps me keep track of which labs I have already reviewed and which ones I need to review.
+![streamlit-home-2023-01-07-13-01-08](https://user-images.githubusercontent.com/78975611/211154666-9ef95010-3e42-4f9a-a98f-1182d6602680.gif)
+
 
 In addition, I also have access to the `status 💭` page, which allows me to see how students are feeling and share my own song recommendations :) 
