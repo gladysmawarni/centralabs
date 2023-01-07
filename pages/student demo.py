@@ -95,7 +95,7 @@ def load_css():
         st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
 
 def comments():
-    st.title(f"{(st.session_state.name).title()}'s labs comments")
+    st.title(f"Student's labs comments")
 
     load_css()
     for i in st.session_state.comments:
