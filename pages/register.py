@@ -57,6 +57,7 @@ key_dict = json.loads(st.secrets["textkey"])
 creds = service_account.Credentials.from_service_account_info(key_dict)
 db = firestore.Client(credentials=creds, project="centralabs99")
 
+st.set_page_config(page_title='Centralabs', page_icon=':coffee:', layout="wide")
 
 def register():
     # # emails of pre-authorized students
